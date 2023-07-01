@@ -14,6 +14,15 @@ class ImageGallery extends StatefulWidget {
   _ImageGalleryState createState() => _ImageGalleryState();
 }
 
+List Mycolors = <Color>[
+  Color(0xFFF6625E),
+  Color(0xFF836DB8),
+  Color(0xFFDECB9C),
+  Colors.white,
+
+];
+Color primaryColor = Mycolors[1];
+
 class _ImageGalleryState extends State<ImageGallery> {
   int selectedColorIndex = 0;
   int selectedImage = 0;
@@ -21,12 +30,7 @@ class _ImageGalleryState extends State<ImageGallery> {
   Color btncolor = Colors.white;
   Color bgtncolor = Colors.grey.shade200;
   bool isSelected = false;
-  List<Color> buttonColors = [
-    Colors.red,
-    Colors.deepPurpleAccent,
-    Colors.brown.shade200,
-    Colors.white,
-  ];
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -34,9 +38,10 @@ class _ImageGalleryState extends State<ImageGallery> {
         Stack(
           children: [
             Container(
-              padding: const EdgeInsets.all(20.0),
+              padding: EdgeInsets.symmetric(vertical: 2),
+
               width: 400,
-              height: 310,
+              height: MediaQuery.of(context).size.height * 0.5,
               decoration: BoxDecoration(
                 color: Colors.grey.shade200,
                 borderRadius: BorderRadius.circular(10.0),
@@ -55,7 +60,7 @@ class _ImageGalleryState extends State<ImageGallery> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: const EdgeInsets.all(3.0),
+                      padding: EdgeInsets.symmetric(vertical: 7),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(
@@ -66,17 +71,19 @@ class _ImageGalleryState extends State<ImageGallery> {
                                 selectedImage = index;
                               });
                             },
+
                             child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                              padding: EdgeInsets.symmetric(vertical: 7),
+                              margin: const EdgeInsets.symmetric(horizontal: 10),
                               width: 50,
-                              height: 50,
+                              height: 40,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 border: Border.all(
                                   color: selectedImage == index
-                                      ? Colors.orange
+                                      ? Colors.deepOrange
                                       : Colors.transparent,
-                                  width: 2,
+                                  width: 1,
                                 ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
@@ -96,9 +103,9 @@ class _ImageGalleryState extends State<ImageGallery> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Transform.translate(
-                  offset: Offset(10, -50),
+                  offset: Offset(10, -40),
                   child: Padding(
-                    padding: EdgeInsets.only(top: 80),
+                    padding: EdgeInsets.only(top: 70),
                     child: Container(
                       width: 50,
                       height: 40,
@@ -178,10 +185,10 @@ class _ImageGalleryState extends State<ImageGallery> {
           ],
         ),
         Transform.translate(
-          offset: Offset(0, -10),
+          offset: Offset(0,-2),
           child: Container(
             width: 400,
-            height: 350,
+            height: 379,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20.0),
@@ -190,17 +197,16 @@ class _ImageGalleryState extends State<ImageGallery> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 15),
+                SizedBox(height: 10),
                 Container(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: RichText(
                       text: TextSpan(
                         text: 'Wireless Controller for PS4',
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
-                          fontWeight: FontWeight.bold,
                         ),
                         children: [
                           WidgetSpan(
@@ -210,7 +216,6 @@ class _ImageGalleryState extends State<ImageGallery> {
                                 'TM',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
@@ -220,12 +225,12 @@ class _ImageGalleryState extends State<ImageGallery> {
                     ),
                   ),
                 ),
-                SizedBox(height: 15),
+                SizedBox(height: 7),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Transform.translate(
-                      offset: Offset(280, 0),
+                      offset: Offset(300, 0),
                       child: Container(
                         child: TextButton(
                           onPressed: () {
@@ -246,7 +251,7 @@ class _ImageGalleryState extends State<ImageGallery> {
                             size: 22,
                           ),
                         ),
-                        width: 90,
+                        width: 80,
                         height: 40,
                         decoration: BoxDecoration(
                           color: bgtncolor,
@@ -256,9 +261,10 @@ class _ImageGalleryState extends State<ImageGallery> {
                     ),
                   ],
                 ),
-                SizedBox(height: 15),
+                SizedBox(height: 10),
+
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -291,7 +297,7 @@ class _ImageGalleryState extends State<ImageGallery> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 5),
                       Text(
                         'you want in your gaming from over precision',
                         style: TextStyle(
@@ -309,235 +315,172 @@ class _ImageGalleryState extends State<ImageGallery> {
                       ),
                       SizedBox(height: 10),
                       GestureDetector(
-                        onTap: (){},
+                        onTap: () {},
                         child: Row(
-                          children:[
+                          children: [
                             Text(
-                                'See More Detail',
-                                style: TextStyle(color: Colors.orange,fontWeight: FontWeight.w600),
-                              ),
-                              SizedBox(width: 5,),
-                              Icon(Icons.arrow_forward_ios,size: 12,color: Colors.orange)
-
+                              'See More Detail',
+                              style: TextStyle(
+                                  color: Colors.deepOrange,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(Icons.arrow_forward_ios,
+                                size: 12, color: Colors.deepOrange)
                           ],
                         ),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 6),
 
-    Transform.translate(
-    offset: Offset(0, -1),
-    child: Container(
-    width: double.infinity,
-    height: 68,
-    decoration: BoxDecoration(
-    color: Colors.grey.shade200,
-    borderRadius: BorderRadius.circular(20.0),
-    border: Border.all(color: Colors.grey.shade200),
-    ),
-    child:Row(
-    children: [
-    GestureDetector(
-    onTap: () {
-    setState(() {
-    isSelected = !isSelected;
-    });
-    },
-    child: Container(
-    margin: EdgeInsets.only(right: 2),
-    padding: EdgeInsets.all(8),
-    height: 40,
-    width: 40,
-    decoration: BoxDecoration(
-    color: Colors.transparent,
-    border: Border.all(
-    color: isSelected ? Colors.orange : Colors.transparent,
-    ),
-    shape: BoxShape.circle,
-    ),
-    child: DecoratedBox(
-    decoration: BoxDecoration(
-    color: Colors.red,
-    shape: BoxShape.circle,
-    ),
-    ),
-    ),
-    ),
-    GestureDetector(
-    onTap: () {
-    setState(() {
-    isSelected = !isSelected;
-    });
-    },
-    child: Container(
-    margin: EdgeInsets.only(right: 2),
-    padding: EdgeInsets.all(8),
-    height: 40,
-    width: 40,
-    decoration: BoxDecoration(
-    color: Colors.transparent,
-    border: Border.all(
-    color: isSelected ? Colors.deepPurpleAccent : Colors.transparent,
-    ),
-    shape: BoxShape.circle,
-    ),
-    child: DecoratedBox(
-    decoration: BoxDecoration(
-    color: Colors.deepPurpleAccent,
-    shape: BoxShape.circle,
-    ),
-    ),
-    ),
-    ),
-    GestureDetector(
-    onTap: () {
-    setState(() {
-    isSelected = !isSelected;
-    });
-    },
-    child: Container(
-    margin: EdgeInsets.only(right: 2),
-    padding: EdgeInsets.all(8),
-    height: 40,
-    width: 40,
-    decoration: BoxDecoration(
-    color: Colors.transparent,
-    border: Border.all(
-    color: isSelected ? Colors.brown.shade200 : Colors.transparent,
-    ),
-    shape: BoxShape.circle,
-    ),
-    child: DecoratedBox(
-    decoration: BoxDecoration(
-    color: Colors.brown.shade200,
-    shape: BoxShape.circle,
-    ),
-    ),
-    ),
-    ),
-    GestureDetector(
-    onTap: () {
-    setState(() {
-    isSelected = !isSelected;
-    });
-    },
-    child: Container(
-    margin: EdgeInsets.only(right: 2),
-    padding: EdgeInsets.all(8),
-    height: 40,
-    width: 40,
-    decoration: BoxDecoration(
-    color: Colors.transparent,
-    shape: BoxShape.circle,
-    border: Border.all(
-    color: Colors.orange,
-    ),
-    ),
-    child: Stack(
-    alignment: Alignment.center,
-    children: [
-    DecoratedBox(
-    decoration: BoxDecoration(
-    color: Colors.white,
-    shape: BoxShape.circle,
-    ),
-    ),
-    DecoratedBox(
-    decoration: BoxDecoration(
-    color: Colors.white,
-    shape: BoxShape.circle,
-    ),
-    ),
-    ],
-    ),
-    ),
-    ),
-    SizedBox(width: 70),
-    GestureDetector(
-    onTap: () {
-    // Action when the '-' item is pressed
-    },
-    child: Container(
-    margin: EdgeInsets.only(right: 2),
-    padding: EdgeInsets.all(8),
-    height: 45,
-    width: 45,
-    decoration: BoxDecoration(
-    color: Colors.white,
-    shape: BoxShape.circle,
-    ),
-    child: Center(
-    child: Text(
-    '-',
-    style: TextStyle(
-    color: Colors.orange,
-    fontSize: 24,
-    fontWeight: FontWeight.bold,
-    ),
-    ),
-    ),
-    ),
-    ),
-    SizedBox(width: 10),
-      GestureDetector(
-        onTap: () {
-          // Action when the '+' item is pressed
-        },
-        child: Container(
-          margin: EdgeInsets.only(right: 2),
-          padding: EdgeInsets.all(8),
-          height: 45,
-          width: 45,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-            child: Text(
-              '+',
-              style: TextStyle(
-                color: Colors.orange,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      ),
-    ],
-    ),
+                Transform.translate(
+                  offset: const Offset(0, 10),
+                  child: Container(
+                    width: 400,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(20.0),
+                      border: Border.all(color: Colors.white),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: Mycolors.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    primaryColor = Mycolors[index];
+                                    selectedColorIndex = index;
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(12), // Add padding here
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: selectedColorIndex == index
+                                          ? Colors.deepOrange
+                                          : Colors.transparent,
+                                        width: 1,
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  child: Container(
+                                    width: 35,
+                                    height: 35,
+                                    child: DecoratedBox(
 
-    ),
-    ),
+                                      decoration: BoxDecoration(
+                                        color: Mycolors[index],
+                                        shape: BoxShape.circle,
 
+                                      ),
+
+
+                                    ),
+                                  ),
+                                ),
+
+                              );
+                            },
+                          ),
+                        ),
+
+                        Center(
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20.0),
+                              border: Border.all(color: Colors.white),
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                // Perform the desired action when the add button is pressed
+                              },
+                              icon: Icon(
+                                Icons.remove,
+                                color: Colors.deepOrange,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10,),
+                        Center(
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20.0),
+                              border: Border.all(color: Colors.white),
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                // Perform the desired action when the add button is pressed
+                              },
+                              icon: Icon(
+                                Icons.add,
+                                color: Colors.deepOrange,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                Transform.translate(
+
+                  offset: const Offset(0, 20),
+                  child: Container(
+                    width: 400,
+                    height: 87,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20.0),
+                      border: Border.all(color: Colors.white),
+                    ),
+                    child: Expanded(
+                      child: Column(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20.0),
+                              border: Border.all(color: Colors.white),
+                            ),
+                          ),
+                          MaterialButton(
+                            onPressed: () {},
+                            shape: const StadiumBorder(),
+                            color: Color(0xFFFF7643),
+                            textColor: Colors.white,
+                            child: const Text("Add To Cart"),
+                            height: 50,
+                            minWidth: 252,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
-        ),
-        Column(
-          children: [
-            Container(
-              width: double.infinity,
-              height: 11,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20.0),
-                border: Border.all(color: Colors.white),
-              ),
-            ),
-            SizedBox(height: 30),
-            MaterialButton(
-              onPressed: () {},
-              shape: StadiumBorder(),
-              color: Colors.orangeAccent,
-              textColor: Colors.white,
-              child: Text("Add To Cart"),
-              height: 48,
-              minWidth: 250,
-            ),
-          ],
         ),
       ],
     );
@@ -550,15 +493,22 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: ImageGallery(
-          images: [
-            'assets/images/Image Popular Product 1.png',
-            'assets/images/ps4_console_white_2.png',
-            'assets/images/ps4_console_white_3.png',
-            'assets/images/ps4_console_white_4.png',
-          ],
+        body: Container(
+          child: Center(
+            child: Stack(
+              children: [
+                ImageGallery(
+                  images: [
+                    'assets/images/Image Popular Product 1.png',
+                    'assets/images/ps4_console_white_2.png',
+                    'assets/images/ps4_console_white_3.png',
+                    'assets/images/ps4_console_white_4.png',
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
-
       ),
     );
   }
