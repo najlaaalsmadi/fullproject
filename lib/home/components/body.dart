@@ -86,7 +86,7 @@ class _BodyState extends State<Body> {
     width: 350,
     height: 100,
     decoration: BoxDecoration(
-    color: Colors.deepPurple,
+    color: Color(0xFF4A3298),
     borderRadius: BorderRadius.circular(30.0),
     ),
     child: Column(
