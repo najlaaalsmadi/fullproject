@@ -1,9 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:flutter/material.dart';
+import 'package:task1_register/Auth.dart';
 import 'package:task1_register/login.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'dot_indicator.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 
 class StartPage extends StatefulWidget {
   const StartPage({Key? key});
@@ -120,7 +123,7 @@ class _StartPageState extends State<StartPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Login(),
+                  builder: (context) => auth(),
                 ),
               );
             },
