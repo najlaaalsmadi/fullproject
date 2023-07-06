@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:task1_register/api_data.dart';
 import 'package:task1_register/details_prod/components/bodymain.dart';
 import 'package:task1_register/details_prod/components/details_screen.dart';
 import 'package:task1_register/size_config.dart';
@@ -15,6 +16,8 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  late Future<Album> albumData;
+  late Future<Album> albumData1;
   bool isPressed = false;
   Color btncolor=Colors.white;
   Color bgtncolor=Colors.grey.shade200;
@@ -24,6 +27,13 @@ class _BodyState extends State<Body> {
   Color bgtncolor3=Colors.grey.shade200;
 
   @override
+  void initState() {
+    super.initState();
+    albumData = fetchAlbum();
+    albumData1=fetchAlbum1();
+  }
+
+
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
@@ -242,7 +252,7 @@ class _BodyState extends State<Body> {
                   ),
                   SizedBox(height: 6),
                   Text(
-                    "Daily Gift",
+                    "Daily  Gift",
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
@@ -531,10 +541,10 @@ class _BodyState extends State<Body> {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => dateles()), // استبدل ProductsDetails بصفحتك الجديدة
+                      MaterialPageRoute(builder: (context) => dateles()),
                     );
                   },
                   child: Container(
@@ -543,99 +553,108 @@ class _BodyState extends State<Body> {
                       borderRadius: BorderRadius.circular(30.0),
                       border: Border.all(color: Colors.white),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(20.0),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.circular(30.0),
-                            border: Border.all(color: Colors.white),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(30.0),
-                            child: Image.asset(
-                              "assets/images/ps4_console_white_1.png",
-                              height: 100,
-                              width: double.infinity,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
+                    child: FutureBuilder<Album>(
+                      future: albumData1,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Wireless Controller",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
+                              Container(
+                                padding: const EdgeInsets.all(20.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  border: Border.all(color: Colors.white),
                                 ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                "for PS4",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "\$64.99",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.orange,
-                                    ),
+                                child: ClipRRect( // Add ClipRRect here
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  child: Image.network(
+                                    snapshot.data!.image,
+                                    width: double.infinity,
+                                    height: 100,
                                   ),
-                                  Container(
-                                    child: TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          if (isPressed) {
-                                            btncolor = Colors.white;            // لون الأيقونة الأصلي
-                                            bgtncolor = Colors.grey.shade200;   // لون خلفية الزر الأصلي
-                                          } else {
-                                            btncolor = Colors.red;              // لون الأيقونة عند الضغط على الزر
-                                            bgtncolor = Colors.red.shade100;    // لون خلفية الزر عند الضغط على الزر
-                                          }
-                                          isPressed = !isPressed;                // تبديل قيمة الحالة
-                                        });
-                                      },
-                                      child: Icon(
-                                        Icons.favorite,
-                                        color: btncolor,
-                                        size: 15,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      snapshot.data!.title,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.black,
                                       ),
                                     ),
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color: bgtncolor,
-                                      shape: BoxShape.circle,
+                                    SizedBox(height: 4),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          '\$${snapshot.data!.price.toString()}',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.orange,
+                                          ),
+                                        ),
+
+                                        Container(
+                                          child: TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                if (isPressed) {
+                                                  btncolor = Colors.white;
+                                                  bgtncolor = Colors.grey.shade200;
+                                                } else {
+                                                  btncolor = Colors.red;
+                                                  bgtncolor = Colors.red.shade100;
+                                                }
+                                                isPressed = !isPressed;
+                                              });
+                                            },
+                                            child: Icon(
+                                              Icons.favorite,
+                                              color: btncolor,
+                                              size: 15,
+                                            ),
+                                          ),
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            color: bgtncolor,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  )
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
-                          ),
-                        ),
-                      ],
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      },
                     ),
                   ),
                 ),
 
 
+
+
                 SizedBox(width: 10),
                 GestureDetector(
-                  onTap: () {
-                    // Handle product card tap
+                  onTap: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => dateles()),
+                    );
                   },
                   child: Container(
                     width: 150,
@@ -643,97 +662,98 @@ class _BodyState extends State<Body> {
                       borderRadius: BorderRadius.circular(30.0),
                       border: Border.all(color: Colors.white),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(20.0),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.circular(30.0),
-                            border: Border.all(color: Colors.white),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(30.0),
-                            child: Image.asset(
-                              "assets/images/Image Popular Product 2.png",
-                              fit: BoxFit.cover,
-                              height: 100,
-                              width: double.infinity,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
+                    child: FutureBuilder<Album>(
+                      future: albumData,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Nike Sport White-",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-
+                              Container(
+                                padding: const EdgeInsets.all(20.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  border: Border.all(color: Colors.white),
                                 ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                "Man pant",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                children: [
-                                  Text(
-                                    "\$50.5",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.orange,
-                                    ),
+                                child: ClipRRect( // Add ClipRRect here
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  child: Image.network(
+                                    snapshot.data!.image,
+                                    width: double.infinity,
+                                    height: 100,
                                   ),
-                                  Container(
-                                    child: TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          if (isPressed) {
-                                            btncolor2 = Colors.white;            // لون الأيقونة الأصلي
-                                            bgtncolor2 = Colors.grey.shade200;   // لون خلفية الزر الأصلي
-                                          } else {
-                                            btncolor2 = Colors.red;              // لون الأيقونة عند الضغط على الزر
-                                            bgtncolor2 = Colors.red.shade100;    // لون خلفية الزر عند الضغط على الزر
-                                          }
-                                          isPressed = !isPressed;                // تبديل قيمة الحالة
-                                        });
-                                      },
-                                      child: Icon(
-                                        Icons.favorite,
-                                        color: btncolor2,
-                                        size: 15,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      snapshot.data!.title,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.black,
                                       ),
                                     ),
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color: bgtncolor2,
-                                      shape: BoxShape.circle,
+                                    SizedBox(height: 4),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          '\$${snapshot.data!.price.toString()}',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.orange,
+                                          ),
+                                        ),
 
+                                        Container(
+                                          child: TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                if (isPressed) {
+                                                  btncolor = Colors.white;
+                                                  bgtncolor = Colors.grey.shade200;
+                                                } else {
+                                                  btncolor = Colors.red;
+                                                  bgtncolor = Colors.red.shade100;
+                                                }
+                                                isPressed = !isPressed;
+                                              });
+                                            },
+                                            child: Icon(
+                                              Icons.favorite,
+                                              color: btncolor,
+                                              size: 15,
+                                            ),
+                                          ),
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            color: bgtncolor,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  )
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
-                          ),
-                        ),
-                      ],
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      },
                     ),
                   ),
                 ),
+
                 SizedBox(width: 10),
                 GestureDetector(
                   onTap: () {

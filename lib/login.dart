@@ -24,6 +24,11 @@ class _LoginState extends State<Login> {
    Future singIn() async{
      await FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailController.text.trim(), password: _passwordController.text.trim());
    }
+  void dispose(){
+    super.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
