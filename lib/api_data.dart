@@ -1,48 +1,54 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
 
-Future<Album> fetchAlbum() async {
-  final response = await http.get(
-    Uri.parse("https://fakestoreapi.com/products/2"),
-
-  );
-  if (response.statusCode == 200) {
-    return Album.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception("Failed to load album");
-  }
-}
-Future<Album> fetchAlbum1() async {
-  final response = await http.get(
-    Uri.parse("https://fakestoreapi.com/products/3"),
-
-  );
-  if (response.statusCode == 200) {
-    return Album.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception("Failed to load album");
-  }
-}
 class Album {
-  final String image;
   final int id;
-  final String title;
-  final double price;
+  final String title, description;
+  final String image;
+  final double rating, price;
+  bool isFavourite, isPopular;
+  Album({
 
-  const Album({
-    required this.image,
+
     required this.id,
+    required this.image,
+    this.rating = 0.0,
+    this.isFavourite = false,
+    this.isPopular = false,
     required this.title,
     required this.price,
+    required this.description,
   });
 
-  factory Album.fromJson(Map<String, dynamic> json) {
-    return Album(
-      image: json['image'],
-      id: json['id'],
-      title: json['title'],
-      price: json['price'],
-    );
+  void toggleFavourite() {
+    isFavourite = !isFavourite;
   }
+
+  factory Album.fromJson(Map<String, dynamic> json) {
+    // قم بفحص إذا ما كانت القيمة تأتي بالشكل الصحيح أم لا
+    if (json['rating'] is Map<String, dynamic>) {
+      var ratingData = json['rating'] as Map<String, dynamic>;
+      var rate = double.parse(ratingData['rate'].toString());
+      var count = ratingData['count'] as int;
+      return Album(
+        image: json['image'],
+        id: json['id'],
+        title: json['title'],
+        price: double.parse(json['price'].toString()),
+        description: json['description'],
+        rating: rate,
+        // يمكنك استخدام القيمة 'count' إذا لزم الأمر
+      );
+    } else {
+      // إذا كان التنسيق الصحيح للقيمة، قم بتحويلها كالمعتاد
+      return Album(
+        image: json['image'],
+        id: json['id'],
+        title: json['title'],
+        price: double.parse(json['price'].toString()),
+        description: json['description'],
+        rating: double.parse(json['rating'].toString()),
+      );
+    }
+  }
+
+
 }

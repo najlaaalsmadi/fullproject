@@ -1,10 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:task1_register/api_data.dart';
+import 'package:task1_register/constants.dart';
 import 'package:task1_register/details_prod/components/bodymain.dart';
 import 'package:task1_register/details_prod/components/details_screen.dart';
+import 'package:task1_register/home/components/seemore.dart';
+import 'package:task1_register/profile/profle.dart';
 import 'package:task1_register/size_config.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
+Future<List<Album>> fetchAlbum() async {
+  final response =
+  await http.get(Uri.parse("https://fakestoreapi.com/products"));
+
+  if (response.statusCode == 200) {
+    List<dynamic> data = json.decode(response.body);
+    List<Album> albums = data.map((json) => Album.fromJson(json)).toList();
+    return albums;
+  } else {
+    throw Exception("Failed to load album");
+  }
+}
 const kSecondaryColor = Color(0xFFABCDEF);
 
 class Body extends StatefulWidget {
@@ -16,8 +33,8 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  late Future<Album> albumData;
-  late Future<Album> albumData1;
+  late Future<List<Album>> albumData;
+
   bool isPressed = false;
   Color btncolor=Colors.white;
   Color bgtncolor=Colors.grey.shade200;
@@ -30,7 +47,6 @@ class _BodyState extends State<Body> {
   void initState() {
     super.initState();
     albumData = fetchAlbum();
-    albumData1=fetchAlbum1();
   }
 
 
@@ -76,7 +92,14 @@ class _BodyState extends State<Body> {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyAppprofile(),
+                    ),
+                  );
+                },
                 icon: SvgPicture.asset(
                   'assets/icons/User Icon.svg',
                   height: 20,
@@ -348,6 +371,7 @@ class _BodyState extends State<Body> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
+              SizedBox(height: 30),
               Container(
                 width: 250,
                 decoration: BoxDecoration(
@@ -366,7 +390,6 @@ class _BodyState extends State<Body> {
                           children: [
                             Image(
                               image: AssetImage('assets/images/Image Banner 2.png'),
-                              fit: BoxFit.cover,
                             ),
                             Positioned.fill(
                               child: Container(
@@ -499,375 +522,184 @@ class _BodyState extends State<Body> {
           ),
         ),
       ),
+          SizedBox(height: 30), // Add spacing between the previous section and the new section
 
-
-
-      SizedBox(height: 30), // Add spacing between the previous section and the new section
-      Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
             children: [
-              Container(
-
-                child: Text(
-                  "Popular Products",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-              Container(
-
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    "See More",
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 12,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    child: Text(
+                      "Popular Products",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-      SizedBox(height: 30),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => dateles()),
-                    );
-                  },
-                  child: Container(
-                    width: 150,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30.0),
-                      border: Border.all(color: Colors.white),
-                    ),
-                    child: FutureBuilder<Album>(
-                      future: albumData1,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(20.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade100,
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  border: Border.all(color: Colors.white),
-                                ),
-                                child: ClipRRect( // Add ClipRRect here
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  child: Image.network(
-                                    snapshot.data!.image,
-                                    width: double.infinity,
-                                    height: 100,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      snapshot.data!.title,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          '\$${snapshot.data!.price.toString()}',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.orange,
-                                          ),
-                                        ),
-
-                                        Container(
-                                          child: TextButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                if (isPressed) {
-                                                  btncolor = Colors.white;
-                                                  bgtncolor = Colors.grey.shade200;
-                                                } else {
-                                                  btncolor = Colors.red;
-                                                  bgtncolor = Colors.red.shade100;
-                                                }
-                                                isPressed = !isPressed;
-                                              });
-                                            },
-                                            child: Icon(
-                                              Icons.favorite,
-                                              color: btncolor,
-                                              size: 15,
-                                            ),
-                                          ),
-                                          width: 30,
-                                          height: 30,
-                                          decoration: BoxDecoration(
-                                            color: bgtncolor,
-                                            shape: BoxShape.circle,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          return CircularProgressIndicator();
-                        }
-                      },
-                    ),
-                  ),
-                ),
-
-
-
-
-                SizedBox(width: 10),
-                GestureDetector(
-                  onTap: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => dateles()),
-                    );
-                  },
-                  child: Container(
-                    width: 150,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30.0),
-                      border: Border.all(color: Colors.white),
-                    ),
-                    child: FutureBuilder<Album>(
-                      future: albumData,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(20.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade100,
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  border: Border.all(color: Colors.white),
-                                ),
-                                child: ClipRRect( // Add ClipRRect here
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  child: Image.network(
-                                    snapshot.data!.image,
-                                    width: double.infinity,
-                                    height: 100,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      snapshot.data!.title,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          '\$${snapshot.data!.price.toString()}',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.orange,
-                                          ),
-                                        ),
-
-                                        Container(
-                                          child: TextButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                if (isPressed) {
-                                                  btncolor = Colors.white;
-                                                  bgtncolor = Colors.grey.shade200;
-                                                } else {
-                                                  btncolor = Colors.red;
-                                                  bgtncolor = Colors.red.shade100;
-                                                }
-                                                isPressed = !isPressed;
-                                              });
-                                            },
-                                            child: Icon(
-                                              Icons.favorite,
-                                              color: btncolor,
-                                              size: 15,
-                                            ),
-                                          ),
-                                          width: 30,
-                                          height: 30,
-                                          decoration: BoxDecoration(
-                                            color: bgtncolor,
-                                            shape: BoxShape.circle,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          return CircularProgressIndicator();
-                        }
-                      },
-                    ),
-                  ),
-                ),
-
-                SizedBox(width: 10),
-                GestureDetector(
-                  onTap: () {
-                    // Handle product card tap
-                  },
-                  child: Container(
-
-                    width: 150,
-                    decoration: BoxDecoration(
-
-                      borderRadius: BorderRadius.circular(30.0),
-                      border: Border.all(color: Colors.white),
-                    ),
-                    child: Column(
-
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(20.0),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.circular(30.0),
-                            border: Border.all(color: Colors.white),
-                          ),
-
-                          child: ClipRRect(
-
-                            borderRadius: BorderRadius.circular(30.0),
-                            child: Image.asset(
-                              "assets/images/ps4_console_white_1.png",
-                              height: 100,
-                              width: double.infinity,
-
+                  Container(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                            builder: (context) => SeeMore()
                             ),
-
-                          ),
+                        );
+                      },
+                      child: Text(
+                        "See More",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Wireless Controller",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                "for PS4",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                children: [
-                                  Text(
-                                    "\$64.99",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.orange,
-                                    ),
-                                  ),
-                                  Container(
-                                    child: TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          if (isPressed) {
-                                            btncolor3 = Colors.white;            // لون الأيقونة الأصلي
-                                            bgtncolor3 = Colors.grey.shade100;   // لون خلفية الزر الأصلي
-                                          } else {
-                                            btncolor3 = Colors.red;              // لون الأيقونة عند الضغط على الزر
-                                            bgtncolor3 = Colors.red.shade200;    // لون خلفية الزر عند الضغط على الزر
-                                          }
-                                          isPressed = !isPressed;                // تبديل قيمة الحالة
-                                        });
-                                      },
-                                      child: Icon(
-                                        Icons.favorite,
-                                        color: btncolor3,
-                                        size: 15,
-                                      ),
-                                    ),
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color: bgtncolor3,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 3),
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      SizedBox(width: 10),
+                      FutureBuilder<List<Album>>(
+                        future: albumData,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: snapshot.data!.map((album) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                          builder: (context) => dateles(),
+                                      ),
+                                      );
+                                    },
+                                    child: Card(
+                                      elevation: 2,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30.0),
+                                        side: BorderSide(color: Colors.white),
+                                      ),
+                                      child: Container(
+                                        width: 150.0,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(30.0),
+                                        ),
+                                        child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                        ClipRRect(
+                                        borderRadius: BorderRadius.circular(30.0),
+                                        child: SizedBox(
+                                          width: 150.0,
+                                          height: 150.0,
+                                          child: AspectRatio(
+                                            aspectRatio: 1, // تحديد نسبة العرض إلى الارتفاع للصورة
+                                            child: Image.network(
+                                              album.image,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(height: 8),
+                                              Text(
+                                                album.title,
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    '\$${album.price}',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.orange,
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 8),
+                                                  InkWell(
+                                                    borderRadius: BorderRadius.circular(50),
+                                                    onTap: () {
+                                                      setState(() {
+                                                        album.toggleFavourite();
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      padding: EdgeInsets.all(8),
+                                                      height: 30,
+                                                      width: 30,
+                                                      decoration: BoxDecoration(
+                                                        color: album.isFavourite ? kPrimaryColor.withOpacity(0.15) : kSecondaryColor.withOpacity(0.1),
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: Center(
+                                                        child: Icon(
+                                                          album.isFavourite ? Icons.favorite : Icons.favorite_border,
+                                                          color: album.isFavourite ? Colors.red : Colors.grey,
+                                                          size: 18,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+
+
+
+
+
+
+
+                                                ],
+                                              ),
+                                            ],
+                                        ),
+                                      ),
+                                   ], ),
+                                  ),
+                                  ),);
+                                }).toList(),
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            return CircularProgressIndicator();
+                          }
+                        },
+                      ),
+                      // Add more Card widgets for other items
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-
-          ],
-    ),
-    ),
-    ),
+          )
+          ],),
+    ],),),
+      ),
     );
   }}
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {

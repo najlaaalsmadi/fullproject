@@ -56,86 +56,88 @@ class _StartPageState extends State<StartPage> {
         automaticallyImplyLeading: false,
 
       ),
-      body: Column(
-        children: [
-          SizedBox(height: 20),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 5),
-            child: Text(
-              "TOKOTO",
-              style: TextStyle(
-                fontSize: 30,
-                color: Colors.orangeAccent,
-                fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(height: 20),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 5),
+              child: Text(
+                "TOKOTO",
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Colors.orangeAccent,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 5),
-          Text(
-            "Welcome to TOKOTO, let's shop!",
-            style: TextStyle(
-              fontSize: 15,
-              color: Colors.grey,
+            SizedBox(height: 5),
+            Text(
+              "Welcome to TOKOTO, let's shop!",
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.grey,
+              ),
             ),
-          ),
-          SizedBox(height: 25),
-          CarouselSlider(
-            carouselController: carouselController,
-            items: imageList.map((imagePath) {
-              return Image.asset(
-                imagePath,
-                fit: BoxFit.cover,
-                height: 850,
-                width: 200,
-              );
-            }).toList(),
-            options: CarouselOptions(
-              height: 200, // تم تحديث الارتفاع إلى 700 هنا
-              autoPlay: true,
-              enlargeCenterPage: true,
-              aspectRatio: 16 / 9,
-              autoPlayCurve: Curves.fastOutSlowIn,
-              enableInfiniteScroll: true,
-              autoPlayAnimationDuration: Duration(milliseconds: 800),
-              viewportFraction: 0.8,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  currentIndex = index;
-                });
+            SizedBox(height: 25),
+            CarouselSlider(
+              carouselController: carouselController,
+              items: imageList.map((imagePath) {
+                return Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                  height: 850,
+                  width: 200,
+                );
+              }).toList(),
+              options: CarouselOptions(
+                height: 200, // تم تحديث الارتفاع إلى 700 هنا
+                autoPlay: true,
+                enlargeCenterPage: true,
+                aspectRatio: 16 / 9,
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enableInfiniteScroll: true,
+                autoPlayAnimationDuration: Duration(milliseconds: 800),
+                viewportFraction: 0.8,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    currentIndex = index;
+                  });
+                },
+              ),
+            ),
+
+            SizedBox(height: 20),
+            DotIndicator(
+              dotCount: imageList.length,
+              currentIndex: currentIndex,
+              decorator: decorator,
+            ),
+            SizedBox(height: 50),
+            SizedBox(height: 50),
+            SizedBox(height: 50),
+            SizedBox(height: 50),
+            SizedBox(height: 50),
+
+            MaterialButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => auth(),
+                  ),
+                );
               },
+              shape: StadiumBorder(),
+              color: Colors.orange,
+              textColor: Colors.white,
+              child: Text("Continue"),
+              height: 40,
+              minWidth: 300,
             ),
-          ),
-
-          SizedBox(height: 20),
-          DotIndicator(
-            dotCount: imageList.length,
-            currentIndex: currentIndex,
-            decorator: decorator,
-          ),
-          SizedBox(height: 50),
-          SizedBox(height: 50),
-          SizedBox(height: 50),
-          SizedBox(height: 50),
-          SizedBox(height: 50),
-
-          MaterialButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => auth(),
-                ),
-              );
-            },
-            shape: StadiumBorder(),
-            color: Colors.orange,
-            textColor: Colors.white,
-            child: Text("Continue"),
-            height: 40,
-            minWidth: 300,
-          ),
-          SizedBox(height: 25),
-        ],
+            SizedBox(height: 25),
+          ],
+        ),
       ),
     );
   }

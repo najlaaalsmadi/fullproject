@@ -1,6 +1,10 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:task1_register/api_data.dart';
 import 'package:task1_register/details_prod/components/details_screen.dart';
+
 
 class dateles extends StatefulWidget {
   const dateles({super.key});
@@ -15,7 +19,7 @@ class _datelesState extends State<dateles> {
       return Scaffold(
       body: MyApp(),
 
-    );;
+    );
   }
 }
 
