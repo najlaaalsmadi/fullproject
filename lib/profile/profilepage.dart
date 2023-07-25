@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task1_register/Auth.dart';
 import 'package:task1_register/home/components/home_screen.dart';
+import 'package:task1_register/profile/setting.dart';
 import 'package:task1_register/start.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -32,13 +33,20 @@ class _profilepageState extends State<profilepage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => HomeScreen()
+                  builder: (context) => HomeScreen(),
               ),
             );
           },
         ),
         actions: [
-          IconButton(onPressed: () {},
+          IconButton(onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Setting(),
+                  ),
+            );
+          },
             icon: Icon(Icons.settings, color: Colors.white,),
           ),
 

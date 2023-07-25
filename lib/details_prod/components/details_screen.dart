@@ -22,6 +22,7 @@ class ImageGallery extends StatefulWidget {
 
   const ImageGallery({Key? key,
     required this.images,
+
   }) : super(key: key);
 
   final List<String> images;

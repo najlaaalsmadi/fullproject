@@ -1,15 +1,17 @@
 import 'dart:convert';
+import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:task1_register/api_data.dart';
 import 'package:task1_register/constants.dart';
 import 'package:task1_register/details_prod/components/bodymain.dart';
 import 'package:task1_register/home/components/body.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:task1_register/home/components/wishlist.dart';
+import 'package:task1_register/profile/profle.dart';
+import 'package:task1_register/theme.dart';
 
-void main() {
-  runApp(SeeMore());
-}
-
+// استدعاء بيانات الألبومات من الواجهة الخلفية
 Future<List<Album>> fetchAlbum() async {
   const kSecondaryColor = Color(0xFFABCDEF);
   final response = await http.get(Uri.parse("https://fakestoreapi.com/products"));
@@ -19,7 +21,7 @@ Future<List<Album>> fetchAlbum() async {
     List<Album> albums = data.map((json) => Album.fromJson(json)).toList();
     return albums;
   } else {
-    throw Exception("Failed to load albums");
+    throw Exception("فشل في تحميل الألبومات");
   }
 }
 
@@ -32,44 +34,48 @@ class SeeMore extends StatefulWidget {
 
 class _SeeMoreState extends State<SeeMore> {
   late Future<List<Album>> albumData;
+  List<Album> favoriteAlbums = [];
+  ThemeClass _themeClass = ThemeClass();
 
   @override
   void initState() {
     super.initState();
     albumData = fetchAlbum();
+    loadFavoriteAlbums();
+  }
+
+  void updateFavoriteAlbums() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> favoriteAlbumsIds =
+    favoriteAlbums.map((album) => album.id.toString()).toList();
+    await prefs.setStringList('favoriteAlbums', favoriteAlbumsIds);
+  }
+
+  void loadFavoriteAlbums() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? favoriteAlbumsIds = prefs.getStringList('favoriteAlbums');
+
+    if (favoriteAlbumsIds != null) {
+      // تحميل الألبومات المفضلة استنادًا إلى قائمة المعرفات المحفوظة
+      favoriteAlbums = (await albumData).where((album) => favoriteAlbumsIds.contains(album.id.toString())).toList();
+    } else {
+      favoriteAlbums = [];
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeClass.ligthTheme,
+      darkTheme: ThemeClass.darkTheme,
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       color: Colors.white,
       home: Scaffold(
-        backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(
             children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back_ios, color: Colors.black),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Body(),
-                        ),
-                      );
-                    },
-                  ),
-                  Center(
-                    child: Text(
-                      'All Products',
-                      style: TextStyle(color: Colors.black, fontSize: 25),
-                    ),
-                  ),
-                ],
-              ),
+              // شريط التنقل
               Expanded(
                 child: FutureBuilder<List<Album>>(
                   future: albumData,
@@ -84,7 +90,7 @@ class _SeeMoreState extends State<SeeMore> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => dateles(),
+                                  builder: (context) => dateles(album: album,),
                                 ),
                               );
                             },
@@ -102,6 +108,7 @@ class _SeeMoreState extends State<SeeMore> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    // صورة الألبوم
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(20.0),
                                       child: SizedBox(
@@ -111,7 +118,6 @@ class _SeeMoreState extends State<SeeMore> {
                                           aspectRatio: 1,
                                           child: Image.network(
                                             album.image,
-
                                           ),
                                         ),
                                       ),
@@ -122,6 +128,7 @@ class _SeeMoreState extends State<SeeMore> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(height: 8),
+                                          // عنوان الألبوم
                                           Text(
                                             album.title,
                                             style: TextStyle(
@@ -134,6 +141,7 @@ class _SeeMoreState extends State<SeeMore> {
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
+                                              // سعر الألبوم
                                               Text(
                                                 '\$${album.price}',
                                                 style: TextStyle(
@@ -143,11 +151,18 @@ class _SeeMoreState extends State<SeeMore> {
                                                 ),
                                               ),
                                               SizedBox(width: 8),
+
                                               InkWell(
                                                 borderRadius: BorderRadius.circular(50),
                                                 onTap: () {
                                                   setState(() {
                                                     album.toggleFavourite();
+                                                    if (album.isFavourite) {
+                                                      favoriteAlbums.add(album);
+                                                    } else {
+                                                      favoriteAlbums.remove(album);
+                                                    }
+                                                    updateFavoriteAlbums(); // حفظ القائمة المفضلة المحدثة
                                                   });
                                                 },
                                                 child: Container(
@@ -162,9 +177,7 @@ class _SeeMoreState extends State<SeeMore> {
                                                   ),
                                                   child: Center(
                                                     child: Icon(
-                                                      album.isFavourite
-                                                          ? Icons.favorite
-                                                          : Icons.favorite_border,
+                                                      album.isFavourite ? Icons.favorite : Icons.favorite_border,
                                                       color: album.isFavourite ? Colors.red : Colors.grey,
                                                       size: 18,
                                                     ),
@@ -173,6 +186,7 @@ class _SeeMoreState extends State<SeeMore> {
                                               ),
                                             ],
                                           ),
+                                          // تقييم الألبوم
                                           Row(
                                             children: [
                                               Icon(Icons.star,color: Colors.orangeAccent,),
@@ -197,7 +211,7 @@ class _SeeMoreState extends State<SeeMore> {
                         },
                       );
                     } else if (snapshot.hasError) {
-                      return Text("Error: ${snapshot.error}");
+                      return Text("خطأ: ${snapshot.error}");
                     } else {
                       return CircularProgressIndicator();
                     }
@@ -207,6 +221,64 @@ class _SeeMoreState extends State<SeeMore> {
             ],
           ),
         ),
+        appBar: CustomAppBar(),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.symmetric(vertical: 15),
+        decoration: BoxDecoration(
+          color: _themeClass.lightPrimaryColor,
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(40),
+            topLeft: Radius.circular(40),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(
+                "assets/icons/Shop Icon.svg",
+                height: 20,
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FavoritesPage(favoriteAlbums: favoriteAlbums,),
+                  ),
+                );
+              },
+              icon: SvgPicture.asset(
+                'assets/icons/Heart Icon.svg',
+                height: 20,
+              ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(
+                'assets/icons/Chat bubble Icon.svg',
+                height: 20,
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyAppprofile(),
+                  ),
+                );
+              },
+              icon: SvgPicture.asset(
+                'assets/icons/User Icon.svg',
+                height: 20,
+              ),
+            ),
+          ],
+        ),
+      ),
       ),
     );
   }

@@ -35,10 +35,8 @@ class Album {
         price: double.parse(json['price'].toString()),
         description: json['description'],
         rating: rate,
-        // يمكنك استخدام القيمة 'count' إذا لزم الأمر
       );
     } else {
-      // إذا كان التنسيق الصحيح للقيمة، قم بتحويلها كالمعتاد
       return Album(
         image: json['image'],
         id: json['id'],

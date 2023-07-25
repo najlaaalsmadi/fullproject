@@ -66,7 +66,7 @@ class _StartPageState extends State<StartPage> {
                 "TOKOTO",
                 style: TextStyle(
                   fontSize: 30,
-                  color: Colors.orangeAccent,
+                  color: Theme.of(context).colorScheme.secondary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -76,7 +76,7 @@ class _StartPageState extends State<StartPage> {
               "Welcome to TOKOTO, let's shop!",
               style: TextStyle(
                 fontSize: 15,
-                color: Colors.grey,
+                color: Theme.of(context).colorScheme.secondary,
               ),
             ),
             SizedBox(height: 25),

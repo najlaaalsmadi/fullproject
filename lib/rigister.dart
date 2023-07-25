@@ -1,10 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:task1_register/Auth.dart';
 import 'package:task1_register/login.dart';
 import 'package:task1_register/complete_profile.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:task1_register/theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key});
@@ -14,56 +15,51 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _emailController=TextEditingController();
-  final _passwordController=TextEditingController();
-  final _confirmPasswordController=TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
   Future singUp() async {
-    if(ConfirmPassword()) {
-
+    if (confirmPassword()) {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
-
       );
       Navigator.of(context).pushReplacementNamed('/auth');
     }
-
   }
-    bool ConfirmPassword(){
-         if(_passwordController.text.trim()==_confirmPasswordController.text.trim()){
 
-              return true;
+  bool confirmPassword() {
+    if (_passwordController.text.trim() == _confirmPasswordController.text.trim()) {
+      return true;
+    } else {
+      return false;
     }
-         else
-           {
-
-             return false;
-           }
   }
-  void dispose(){
+
+  void dispose() {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
   }
+
   @override
-
   Widget build(BuildContext context) {
-
     return MaterialApp(
+      themeMode: ThemeMode.system,
+      theme: ThemeClass.ligthTheme,
+      darkTheme: ThemeClass.darkTheme,
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.grey,
         ),
-        backgroundColor: Colors.white,
         body: Center(
           child: SafeArea(
             child: Center(
               child: SingleChildScrollView(
                 child: Column(
-
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -126,9 +122,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   labelText: 'Email',
                                   hintText: 'Enter your Email',
                                   prefixIcon: Padding(
-                                    padding: const EdgeInsets.only(right: 8.0), // تحديد التحريك إلى اليمين
+                                    padding: const EdgeInsets.only(
+                                      right: 8.0,
+                                    ),
                                     child: Transform.scale(
-                                      scale: 0.5, // تغيير النسبة هنا حسب الحجم المطلوب
+                                      scale: 0.5,
                                       child: SvgPicture.asset(
                                         "assets/icons/Mail.svg",
                                       ),
@@ -137,7 +135,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
-                                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                                  floatingLabelBehavior:
+                                  FloatingLabelBehavior.always,
                                 ),
                               ),
                             ),
@@ -150,12 +149,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 obscureText: true,
                                 controller: _passwordController,
                                 decoration: InputDecoration(
-                                  labelText: 'password',
+                                  labelText: 'Password',
                                   hintText: 'Enter your password',
                                   prefixIcon: Padding(
-                                    padding: const EdgeInsets.only(right: 8.0), // تحديد التحريك إلى اليمين
+                                    padding: const EdgeInsets.only(
+                                      right: 8.0,
+                                    ),
                                     child: Transform.scale(
-                                      scale: 0.5, // تغيير النسبة هنا حسب الحجم المطلوب
+                                      scale: 0.5,
                                       child: SvgPicture.asset(
                                         "assets/icons/Lock.svg",
                                       ),
@@ -164,7 +165,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
-                                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                                  floatingLabelBehavior:
+                                  FloatingLabelBehavior.always,
                                 ),
                               ),
                             ),
@@ -177,12 +179,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 obscureText: true,
                                 controller: _confirmPasswordController,
                                 decoration: InputDecoration(
-                                  labelText: 'password',
+                                  labelText: 'Confirm Password',
                                   hintText: 'Re-enter your password',
                                   prefixIcon: Padding(
-                                    padding: const EdgeInsets.only(right: 8.0), // تحديد التحريك إلى اليمين
+                                    padding: const EdgeInsets.only(
+                                      right: 8.0,
+                                    ),
                                     child: Transform.scale(
-                                      scale: 0.5, // تغيير النسبة هنا حسب الحجم المطلوب
+                                      scale: 0.5,
                                       child: SvgPicture.asset(
                                         "assets/icons/Lock.svg",
                                       ),
@@ -191,7 +195,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
-                                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                                  floatingLabelBehavior:
+                                  FloatingLabelBehavior.always,
                                 ),
                               ),
                             ),
@@ -200,30 +205,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Center(
                             child: GestureDetector(
                               onTap: singUp,
-
                               child: Container(
-
                                 padding: EdgeInsets.all(16),
                                 decoration: BoxDecoration(
                                   color: Colors.orange,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Center(
-                                  child: Text("Continue",style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-
+                                  child: Text(
+                                    "Continue",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
-                                height:50,
+                                height: 50,
                                 width: 340,
-
                               ),
-
                             ),
-
                           ),
                           SizedBox(height: 25),
                         ],
@@ -237,21 +238,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             color: Colors.grey.shade200,
                             shape: BoxShape.circle,
                           ),
-
-                          child:IconButton(
+                          child: IconButton(
                             onPressed: () {},
-                            icon: SvgPicture.asset("assets/icons/google-icon.svg"),
-                          ),
-                        ),
-                        SizedBox(height: 25),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            shape: BoxShape.circle,
-                          ),
-                          child:IconButton(
-                            onPressed: () {},
-                            icon: SvgPicture.asset("assets/icons/facebook-2.svg"),
+                            icon: SvgPicture.asset(
+                              "assets/icons/google-icon.svg",
+                            ),
                           ),
                         ),
                         SizedBox(height: 25),
@@ -262,7 +253,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           child: IconButton(
                             onPressed: () {},
-                            icon: SvgPicture.asset("assets/icons/twitter.svg"),
+                            icon: SvgPicture.asset(
+                              "assets/icons/facebook-2.svg",
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 25),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            shape: BoxShape.circle,
+                          ),
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: SvgPicture.asset(
+                              "assets/icons/twitter.svg",
+                            ),
                           ),
                         ),
                       ],
@@ -278,7 +284,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     ),
-
                   ],
                 ),
               ),
